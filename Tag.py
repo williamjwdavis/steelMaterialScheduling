@@ -75,42 +75,17 @@ class Tag:
         self.setTapWeight(row[4])
         self.setTime(row[5])
     
-    def preprocess(self, df): 
-        tempDf = pd.DataFrame()
-        count = 0
-        locCount = 0
+    def print(self):
+        print("Tag: " + str(self.tag))
+        print("Grade: " + str(self.grade))
+        print("Power: " + str(self.power))
+        print("Oxygen: " + str(self.oxygen))
+        print("Tap Weight: " + str(self.tapWeight))
         
-        for index, row in df.iterrows():
-            #Gets the number of rows that are NaN, in this case we care about the ones that have 3 and 4 nulls
-            if (row.isnull().sum() == 0):
-                #first row with most of the columns
-                pass
-                
-            elif (row.isnull().sum() == 5):
-                #row that tells the number of materials in a given location
-                count=0
-                locCount += 1
-                #Get the number of rows to iterate through for the next elif
-                numRows = row[0]
-                
-            elif (row.isnull().sum() == 4):
-                #row that contains a material code and a location
-                tempDf = tempDf.append(row)
-            count += 1
-            
-            if (numRows == count):
-                tempDf["materialCode"] = tempDf["Tag"]
-                tempDf["materialAmt"] = tempDf["Grade"]
-                tempDf = tempDf.drop(columns=["Tag","Grade","Oxygen","Power","Tap Wgt","Time"])
-                tempDf = pd.DataFrame()
-                
-                if (locCount == 1):
-                    self.setLoc1(tempDf)
-                elif (locCount == 2):
-                    self.setLoc2(tempDf)
-                elif (locCount == 3):
-                    self.setLoc3(tempDf)
-                    
+    def printDf(self):
+        print(self.loc1)
+        print(self.loc2)
+        print(self.loc3)
 
 
 
