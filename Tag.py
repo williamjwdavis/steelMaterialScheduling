@@ -65,9 +65,53 @@ class Tag:
     def setLoc3(self, loc3):
         self.loc3 = loc3
         
+    def setInitialRow(self, row):
+        "Here we're expecting the row to be in the following format:"
+        "Tag - Grade - Power - Oxygen - Tap Wgt - Time"
+        self.setTag(row[0])
+        self.setGrade(row[1])
+        self.setPower(row[2])
+        self.setOxygen(row[3])
+        self.setTapWeight(row[4])
+        self.setTime(row[5])
+    
     def preprocess(self, df): 
-        for index, row in df.iterrows():
+        tempDf = pd.DataFrame()
+        count = 0
+        locCount = 0
         
-        #Gets the number of rows that are NaN, in this case we care about the ones that have 3 and 4 nulls
-        row.isnull().sum()
+        for index, row in df.iterrows():
+            #Gets the number of rows that are NaN, in this case we care about the ones that have 3 and 4 nulls
+            if (row.isnull().sum() == 0):
+                #first row with most of the columns
+                pass
+                
+            elif (row.isnull().sum() == 5):
+                #row that tells the number of materials in a given location
+                count=0
+                locCount += 1
+                #Get the number of rows to iterate through for the next elif
+                numRows = row[0]
+                
+            elif (row.isnull().sum() == 4):
+                #row that contains a material code and a location
+                tempDf = tempDf.append(row)
+            count += 1
+            
+            if (numRows == count):
+                tempDf["materialCode"] = tempDf["Tag"]
+                tempDf["materialAmt"] = tempDf["Grade"]
+                tempDf = tempDf.drop(columns=["Tag","Grade","Oxygen","Power","Tap Wgt","Time"])
+                tempDf = pd.DataFrame()
+                
+                if (locCount == 1):
+                    self.setLoc1(tempDf)
+                elif (locCount == 2):
+                    self.setLoc2(tempDf)
+                elif (locCount == 3):
+                    self.setLoc3(tempDf)
+                    
+
+
+
         
