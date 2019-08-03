@@ -22,7 +22,11 @@ def checkNumTags(df):
             count += 1
     return count
 
-def preprocessTag(df):
+def preprocessTag(df, gradeDict):
+    """
+    Preprocesses and individual Tag Excel Sheet into Tag Objects that are held 
+    in a Dictionary of arrays where each key corresponds to an array of tag objects
+    """
     tempDf = pd.DataFrame()
     outerCount = 0
     innerCount = 0
@@ -68,7 +72,11 @@ def preprocessTag(df):
         
 gradeDict = {}
 
+"""
+DAT
+"""
 for filename in os.listdir("DAT_Excel_Files"):
+    #Iterates through each DAT file and reads it in as a dtaaframe
     tempName = "DAT_Excel_Files/" + filename
     tempDf = pd.read_excel(tempName)
     
@@ -80,19 +88,16 @@ for filename in os.listdir("DAT_Excel_Files"):
     #Each grade is repreented by an array of the tags
     gradeDict[grade] = []
     
-    preprocessTag(tempDf)
-
-    break
+    #Populate the gradeDict with arrays of Tag objects
+    preprocessTag(tempDf, gradeDict)
     
-"""for filename in os.listdir("DAT_Excel_Files"):
-    tempName = "DAT_Excel_Files/" + filename
-    if count == 0:
-        df_DAT = pd.read_excel(tempName)
-    else:
-        df_DAT = df_DAT.append(pd.read_excel(tempName))    
-    count = count+1
+    
+    
+    
 """
-
+MIX
+"""
+#Iterate through the MIX excel files into one Excel sheet that includes the grade as well
 count = 0    
 for filename in os.listdir("MIX_Excel_Files"):
     grade = ""
@@ -121,7 +126,7 @@ for filename in os.listdir("MIX_Excel_Files"):
         df_MIX = df_MIX.append(df_MIX_temp)
     count = count+1
 
-df_DAT.to_excel("DAT_Analysis/DAT_Output.xlsx")
+
 df_MIX.to_excel("MIX_Analysis/MIX_Output.xlsx")
 
 """
